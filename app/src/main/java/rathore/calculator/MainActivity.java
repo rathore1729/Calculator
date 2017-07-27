@@ -398,6 +398,7 @@ public class MainActivity extends AppCompatActivity {
                                 splited[i + 1] = "" + (Double.parseDouble(splited[i - 1]) / Double.parseDouble(splited[i + 1]));
                                 splited[i] = "+";
                                 splited[i - 1] = "0";
+
                             }
                         }
                     }
