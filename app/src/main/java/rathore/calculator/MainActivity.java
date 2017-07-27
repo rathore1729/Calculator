@@ -9,6 +9,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import java.lang.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.regex.Pattern;
 
 import static java.lang.Double.parseDouble;
@@ -380,9 +382,9 @@ public class MainActivity extends AppCompatActivity {
                     {
                         if(splited[i].equals("*"))
                         {
-                            splited[i-1] = "" + (Double.parseDouble(splited[i-1])*Double.parseDouble(splited[i+1]));
+                            splited[i+1] = "" + (Double.parseDouble(splited[i-1])*Double.parseDouble(splited[i+1]));
                             splited[i] = "+";
-                            splited[i+1] = "0";
+                            splited[i-1] = "0";
                         }
                         else
                         {
@@ -393,9 +395,9 @@ public class MainActivity extends AppCompatActivity {
                                 return;
                             }
                             else {
-                                splited[i - 1] = "" + (Double.parseDouble(splited[i - 1]) / Double.parseDouble(splited[i + 1]));
+                                splited[i + 1] = "" + (Double.parseDouble(splited[i - 1]) / Double.parseDouble(splited[i + 1]));
                                 splited[i] = "+";
-                                splited[i + 1] = "0";
+                                splited[i - 1] = "0";
                             }
                         }
                     }
@@ -403,10 +405,18 @@ public class MainActivity extends AppCompatActivity {
 
                 for(int i = 1; i<=len-2; i += 2)
                 {
+                    Double toBeTruncated;
                     if(splited[i].equals("+"))
-                        splited[i+1] = "" + (Double.parseDouble(splited[i - 1]) + Double.parseDouble(splited[i + 1]));
+                        toBeTruncated = (Double.parseDouble(splited[i - 1]) + Double.parseDouble(splited[i + 1]));
+                        //splited[i+1] = "" + (Double.parseDouble(splited[i - 1]) + Double.parseDouble(splited[i + 1]));
                     else
-                        splited[i+1] = "" + (Double.parseDouble(splited[i - 1]) - Double.parseDouble(splited[i + 1]));
+                        toBeTruncated = (Double.parseDouble(splited[i - 1]) - Double.parseDouble(splited[i + 1]));
+                        //splited[i+1] = "" + (Double.parseDouble(splited[i - 1]) - Double.parseDouble(splited[i + 1]));
+
+                    Double truncatedDouble = BigDecimal.valueOf(toBeTruncated)
+                            .setScale(3, RoundingMode.HALF_UP)
+                            .doubleValue();
+                    splited[i+1] = "" + truncatedDouble;
                 }
                 if(Pattern.matches(".*[.][0]",splited[len-1]))
                     text.setText(splited[len-1].substring(0,(splited[len-1].length()-2)));
